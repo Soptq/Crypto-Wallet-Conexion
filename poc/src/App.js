@@ -64,14 +64,13 @@ function App() {
         (async () => {
             const address = (await web3.eth.getAccounts())[0];
             const chainId = await web3.eth.getChainId();
-            await verifyUser(address)
-            await checkSpecifiedToken(address, chainId, tokenAddress)
+            await verifyUser(address);
+            await checkSpecifiedToken(address, chainId, tokenAddress);
 
-            web3.eth.subscribe('logs', {
-                address: tokenAddress
-            }, function (error, result) {
-            }).on("data", function (log) {
-                web3.eth.getTransaction(log.transactionHash)
+            (new web3.eth.Contract(tokenABI, tokenAddress)).events.Transfer({
+                fromBlock: 0
+            }).on('data', event => {
+                web3.eth.getTransaction(event.transactionHash)
                     .then(function (transaction) {
                         if (transaction.from === address || transaction.to === address) {
                             checkSpecifiedToken(address, chainId, tokenAddress)
@@ -84,7 +83,6 @@ function App() {
             web3.givenProvider.removeListener('accountsChanged', accountsChangedCallback);
             web3.givenProvider.removeListener('chainChanged', chainChangedCallback);
             web3.givenProvider.removeListener("disconnect", disconnectCallback);
-            web3.eth.clearSubscriptions();
         }
     }, [web3, connected, verifyUser, checkSpecifiedToken, tokenAddress]);
 
