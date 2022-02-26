@@ -6,6 +6,7 @@ There are three metrics in this system: `connected`, `verified`, and `haveToken`
 
 Only all 3 metrics become `true` can the user accesses the JWT content. Moreover, when the user’s wallet is connected, all wallet events are been monitored so that the change of either account or chain will cause a re-verify and re-check of his token balance. Meanwhile, a background task will be monitoring transactions of the given token as well, and if it detects the user transferring the token, it will also request a re-check.
 
+The background monitor task is driven by contract event. That is, when connected to the provider (i.e. your wallet), it starts to analyze `Transfer` events that is triggered by the specified token. If the sender or receiver equals to the current wallet address, it will request a recheck of user's wallet balance.
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
