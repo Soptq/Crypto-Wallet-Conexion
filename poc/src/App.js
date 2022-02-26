@@ -67,6 +67,9 @@ function App() {
             await verifyUser(address);
             await checkSpecifiedToken(address, chainId, tokenAddress);
 
+            if (!(verified && haveToken))
+                return
+
             (new web3.eth.Contract(tokenABI, tokenAddress)).events.Transfer({
                 fromBlock: 0
             }).on('data', event => {

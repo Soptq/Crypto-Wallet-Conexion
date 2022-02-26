@@ -1,3 +1,11 @@
+There are three metrics in this system: `connected`, `verified`, and `haveToken`:
+* 
+* `connected` refers to whether the user’s wallet is connected.
+* `verified` refers to whether the user proves he owns the wallet by signing a message
+* `haveToken` refers to whether the user has the specified token. (configurable in `.env`).
+
+Only all 3 metrics become `true` can the user accesses the JWT content. Moreover, when the user’s wallet is connected, all wallet events are been monitored so that the change of either account or chain will cause a re-verify and re-check of his token balance. Meanwhile, a background task will be monitoring transactions of the given token as well, and if it detects the user transferring the token, it will also request a re-check.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
